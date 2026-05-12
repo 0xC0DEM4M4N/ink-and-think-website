@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ink & Think — A Playground for Literacy Learning</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;600&family=Nunito:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1e293b;
+            --charcoal: #334155;
+            --pencil: #94a3b8;
+            --paper: #fefce8;
+            --white: #ffffff;
+            --play-yellow: #fbbf24;
+            --play-yellow-hover: #f59e0b;
+            --success: #14b8a6;
+            --soft-red: #f87171;
+            --shadow-sm: 0 1px 3px rgba(30, 41, 59, 0.08);
+            --shadow-md: 0 4px 20px rgba(30, 41, 59, 0.08);
+            --shadow-lg: 0 10px 40px rgba(30, 41, 59, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--charcoal);
+            background-color: var(--paper);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.2;
+        }
+
+        .font-script {
+            font-family: 'Caveat', cursive;
+            font-weight: 700;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background: var(--paper);
+            z-index: 100;
+            padding: 16px 0;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 2px 20px rgba(30, 41, 59, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 28px;
+            text-decoration: none;
+            color: var(--ink);
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+        }
+
+        .logo .ink {
+            font-family: 'Caveat', cursive;
+            font-weight: 700;
+            font-size: 32px;
+        }
+
+        .logo .think {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--charcoal);
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--play-yellow);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--ink);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 9999px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--play-yellow);
+            color: var(--ink);
+            box-shadow: 0 4px 14px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: var(--play-yellow-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--ink);
+            border: 2px solid var(--pencil);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--play-yellow);
+            background: var(--play-yellow);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        /* Mobile menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-menu-btn svg {
+            width: 24px;
+            height: 24px;
+            color: var(--ink);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 24px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-illustration {
+            margin-bottom: 32px;
+            display: inline-block;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .hero .ink {
+            font-family: 'Caveat', cursive;
+            font-weight: 700;
+            font-size: 64px;
+            color: var(--ink);
+        }
+
+        .hero .think {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            color: var(--ink);
+        }
+
+        .hero-strapline {
+            font-family: 'Nunito', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 32px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 48px;
+        }
+
+        .hero-cards {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 24px 20px;
+            width: 180px;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hero-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero-card-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .hero-card:hover .hero-card-icon {
+            transform: scale(1.15) rotate(-8deg);
+        }
+
+        .hero-card-title {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--ink);
+        }
+
+        /* Background pattern */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle, var(--pencil) 1px, transparent 1px);
+            background-size: 24px 24px;
+            opacity: 0.15;
+            z-index: 1;
+        }
+
+        /* Sections */
+        .section {
+            padding: 80px 24px;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-header h2 {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: var(--charcoal);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Stations */
+        .stations {
+            background: var(--white);
+        }
+
+        .stations-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .station-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 40px 32px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .station-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--play-yellow);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .station-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--play-yellow);
+        }
+
+        .station-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .station-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: var(--paper);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .station-card:hover .station-icon {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .station-card h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .station-card p {
+            color: var(--charcoal);
+            margin-bottom: 24px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .station-card .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .free-note {
+            text-align: center;
+            margin-top: 40px;
+            font-family: 'Caveat', cursive;
+            font-size: 22px;
+            color: var(--pencil);
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: var(--paper);
+        }
+
+        .steps {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 16px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-connector {
+            position: absolute;
+            top: 24px;
+            right: -40px;
+            width: 64px;
+            height: 2px;
+            border-top: 2px dashed var(--pencil);
+        }
+
+        .step:last-child .step-connector {
+            display: none;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--play-yellow);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--ink);
+        }
+
+        .step h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .step p {
+            font-size: 15px;
+            color: var(--charcoal);
+        }
+
+        .how-cta {
+            text-align: center;
+            margin-top: 48px;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background: var(--white);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .testimonial-card {
+            background: var(--paper);
+            border-radius: 16px;
+            padding: 32px;
+            border-left: 4px solid var(--success);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            font-family: 'Caveat', cursive;
+            font-size: 64px;
+            color: var(--play-yellow);
+            line-height: 1;
+            position: absolute;
+            top: 8px;
+            left: 16px;
+            opacity: 0.6;
+        }
+
+        .testimonial-text {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--charcoal);
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .testimonial-author {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            color: var(--ink);
+            font-size: 14px;
+        }
+
+        .testimonial-role {
+            font-size: 13px;
+            color: var(--pencil);
+        }
+
+        .testimonials-cta {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--ink);
+            color: var(--white);
+            padding: 64px 24px 32px;
+            position: relative;
+        }
+
+        .footer-doodles {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath d='M0,20 Q30,5 60,20 T120,20 T180,20 T240,20 T300,20 T360,20 T420,20 T480,20 T540,20 T600,20 T660,20 T720,20 T780,20 T840,20 T900,20 T960,20 T1020,20 T1080,20 T1140,20 T1200,20' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-dasharray='8,8'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            background-size: 1200px 40px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+
+        .footer-brand h3 {
+            font-family: 'Caveat', cursive;
+            font-size: 32px;
+            color: var(--white);
+            margin-bottom: 8px;
+        }
+
+        .footer-brand p {
+            color: var(--pencil);
+            font-size: 15px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--pencil);
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--play-yellow);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
+            padding-top: 24px;
+            text-align: center;
+            color: var(--pencil);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .hero .ink {
+                font-size: 48px;
+            }
+
+            .hero-strapline {
+                font-size: 18px;
+            }
+
+            .stations-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                flex-direction: column;
+                gap: 32px;
+            }
+
+            .step-connector {
+                display: none;
+            }
+
+            .footer-top {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 60px 16px 40px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero .ink {
+                font-size: 40px;
+            }
+
+            .section {
+                padding: 60px 16px;
+            }
+
+            .hero-card {
+                width: 140px;
+                padding: 16px;
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+
+            .hero-card,
+            .station-card,
+            .testimonial-card {
+                transition: none;
+            }
+
+            .station-card:hover {
+                transform: none;
+            }
+        }
+    </style>
+    <base target="_blank">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span class="ink">Ink</span>
+                <span style="font-family:'Nunito',sans-serif;font-weight:400;">&</span>
+                <span class="think">Think</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#letter-lab">Letter Lab</a></li>
+                <li><a href="#word-search">Word Search</a></li>
+                <li><a href="#spelling-test">Spelling Test</a></li>
+                <li><a href="#" class="btn btn-primary btn-small">Start Playing →</a></li>
+            </ul>
+            <button class="mobile-menu-btn" aria-label="Open menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+
+            <h1>
+                <span class="ink">Ink</span>
+                <span style="font-family:'Nunito',sans-serif;font-weight:400;">&</span>
+                <span class="think">Think</span>
+            </h1>
+            <p class="hero-strapline">Write. Wonder. Discover.</p>
+            <div class="hero-buttons">
+                <a href="#stations" class="btn btn-primary">Explore the Playground →</a>
+                <a href="#" class="btn btn-secondary">For Teachers</a>
+            </div>
+            <div class="hero-cards">
+                <div class="hero-card">
+                    <div class="hero-card-icon">🖊️</div>
+                    <div class="hero-card-title">Letter Lab</div>
+                </div>
+                <div class="hero-card">
+                    <div class="hero-card-icon">🔍</div>
+                    <div class="hero-card-title">Word Search</div>
+                </div>
+                <div class="hero-card">
+                    <div class="hero-card-icon">✏️</div>
+                    <div class="hero-card-title">Spelling Test</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stations Section -->
+    <section class="section stations" id="stations">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Choose Your Station</h2>
+                <p>Three ways to play, practice, and grow</p>
+            </div>
+            <div class="stations-grid">
+                <div class="station-card" id="letter-lab">
+                    <div class="station-icon">🖊️</div>
+                    <h3>Letter Lab</h3>
+                    <p>Trace, write, and master every letter. From first scribbles to confident handwriting.</p>
+                    <a href="#" class="btn btn-primary">Open Letter Lab →</a>
+                </div>
+                <div class="station-card" id="word-search">
+                    <div class="station-icon">🔍</div>
+                    <h3>Word Search</h3>
+                    <p>Hunt for hidden words in custom puzzles. Make your own or solve ours.</p>
+                    <a href="#" class="btn btn-primary">Start Searching →</a>
+                </div>
+                <div class="station-card" id="spelling-test">
+                    <div class="station-icon">✏️</div>
+                    <h3>Spelling Test</h3>
+                    <p>Build confidence one word at a time. Custom lists, instant feedback, real progress.</p>
+                    <a href="#" class="btn btn-primary">Take a Test →</a>
+                </div>
+            </div>
+            <p class="free-note">All free. No signup needed. Just pick up your pencil.</p>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section how-it-works">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>How the Playground Works</h2>
+                <p>Simple steps to literacy fun</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-connector"></div>
+                    <div class="step-number">1</div>
+                    <h3>Pick a Tool</h3>
+                    <p>Choose your adventure — letters, words, or spelling</p>
+                </div>
+                <div class="step">
+                    <div class="step-connector"></div>
+                    <div class="step-number">2</div>
+                    <h3>Play & Learn</h3>
+                    <p>Practice at your own pace with instant feedback</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>See Progress</h3>
+                    <p>Track what you've mastered and celebrate wins</p>
+                </div>
+            </div>
+            <div class="how-cta">
+                <a href="#" class="btn btn-primary">Start Your Journey →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section testimonials">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Trusted by Families & Teachers</h2>
+                <p>See what our community says</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">My 6-year-old loves the word searches. She asks to do them every morning
+                        before school. It's become our little routine.</p>
+                    <div class="testimonial-author">Sarah M.</div>
+                    <div class="testimonial-role">Parent</div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">Perfect for Year 2 spellings. I set custom lists each week and the kids
+                        actually enjoy practising now. A game-changer for homework.</p>
+                    <div class="testimonial-author">Mr. Henderson</div>
+                    <div class="testimonial-role">Year 2 Teacher</div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">Finally, something screen-based I feel good about. The Letter Lab helped
+                        my daughter with her pencil grip and confidence.</p>
+                    <div class="testimonial-author">James K.</div>
+                    <div class="testimonial-role">Parent</div>
+                </div>
+            </div>
+            <div class="testimonials-cta">
+                <a href="#" class="btn btn-secondary">Classroom Resources →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-doodles"></div>
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <h3>Ink & Think</h3>
+                    <p>A playground for literacy learning</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#letter-lab">Letter Lab</a>
+                    <a href="#word-search">Word Search</a>
+                    <a href="#spelling-test">Spelling Test</a>
+                    <a href="#">About</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 Ink & Think • Made with ☕ and crayons</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
